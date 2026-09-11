@@ -1,166 +1,212 @@
 (() => {
   const TOTAL_TARGETS = 20;
-  const scene = document.querySelector('#ar-scene');
-  const startBtn = document.querySelector('#start-btn');
-  const startScreen = document.querySelector('#start-screen');
-  const topStatus = document.querySelector('#top-status');
-  const statusPill = document.querySelector('#status-pill');
-  const scanGuide = document.querySelector('#scan-guide');
-  const audioPanel = document.querySelector('#audio-panel');
-  const audioTitle = document.querySelector('#audio-title');
-  const audioState = document.querySelector('#audio-state');
-  const replayBtn = document.querySelector('#replay-btn');
 
-  let arSystem = null;
-  let audioContext = null;
-  let currentSource = null;
-  let currentIndex = null;
-  let activeTarget = null;
-  const audioBuffers = new Map();
-  const loadingBuffers = new Map();
+  const startScreen = document.getElementById("start-screen");
+  const startButton = document.getElementById("start-button");
+  const statusText = document.getElementById("status-text");
+  const replayButton = document.getElementById("replay-button");
+  const scene = document.querySelector("a-scene");
 
-  const audioUrl = (index) => `./audio/KBARA_AUDIO_${String(index + 1).padStart(2, '0')}.mp3`;
-  const displayNumber = (index) => String(index + 1).padStart(2, '0');
+  let currentAudio = null;
+  let currentTarget = null;
+  let arStarted = false;
 
-  scene.addEventListener('loaded', () => {
-    arSystem = scene.systems['mindar-image-system'];
+  // MP3 files are stored directly in the repository root.
+  const audioFiles = Array.from(
+    { length: TOTAL_TARGETS },
+    (_, i) =>
+      `KBARA_AUDIO_${String(i + 1).padStart(2, "0")}.mp3`
+  );
+
+  // Prepare all 20 audio files.
+  const audios = audioFiles.map((src) => {
+    const audio = new Audio(src);
+    audio.preload = "auto";
+    return audio;
   });
 
-  scene.addEventListener('arReady', () => {
-    statusPill.textContent = 'AR sedia';
-    scanGuide.classList.remove('hidden');
-    window.setTimeout(() => {
-      if (activeTarget === null) statusPill.textContent = 'Cari gambar K-BaRa';
-    }, 1000);
-  });
-
-  scene.addEventListener('arError', () => {
-    statusPill.textContent = 'Kamera tidak dapat dimulakan';
-    alert('AR tidak dapat dimulakan. Pastikan kamera dibenarkan dan laman dibuka melalui HTTPS.');
-  });
-
-  async function ensureAudioContext() {
-    if (!audioContext) {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) throw new Error('Web Audio API tidak disokong.');
-      audioContext = new AC();
-    }
-    if (audioContext.state === 'suspended') await audioContext.resume();
-  }
-
-  async function getBuffer(index) {
-    if (audioBuffers.has(index)) return audioBuffers.get(index);
-    if (loadingBuffers.has(index)) return loadingBuffers.get(index);
-
-    const promise = fetch(audioUrl(index), { cache: 'force-cache' })
-      .then((r) => {
-        if (!r.ok) throw new Error(`Audio ${displayNumber(index)} gagal dimuatkan (${r.status})`);
-        return r.arrayBuffer();
-      })
-      .then((data) => audioContext.decodeAudioData(data.slice(0)))
-      .then((buffer) => {
-        audioBuffers.set(index, buffer);
-        loadingBuffers.delete(index);
-        return buffer;
-      })
-      .catch((err) => {
-        loadingBuffers.delete(index);
-        throw err;
-      });
-
-    loadingBuffers.set(index, promise);
-    return promise;
-  }
-
-  function stopAudio() {
-    if (currentSource) {
-      try { currentSource.stop(); } catch (_) {}
-      currentSource.disconnect();
-      currentSource = null;
+  function setStatus(message) {
+    if (statusText) {
+      statusText.textContent = message;
     }
   }
 
-  async function playAudio(index, restart = true) {
-    currentIndex = index;
-    audioTitle.textContent = `K-BaRa Audio ${displayNumber(index)}`;
-    audioState.textContent = 'Memuatkan audio…';
-    audioPanel.classList.remove('hidden');
+  function stopCurrentAudio() {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+
+    currentAudio = null;
+  }
+
+  async function playTargetAudio(index) {
+    if (index < 0 || index >= TOTAL_TARGETS) {
+      return;
+    }
+
+    stopCurrentAudio();
+
+    currentTarget = index;
+    currentAudio = audios[index];
+    currentAudio.currentTime = 0;
+
+    setStatus(
+      `Gambar K-BaRa ${String(index + 1).padStart(2, "0")} dikesan. Audio sedang dimainkan.`
+    );
 
     try {
-      await ensureAudioContext();
-      const buffer = await getBuffer(index);
-      if (currentIndex !== index) return;
-      if (restart) stopAudio();
+      await currentAudio.play();
+    } catch (error) {
+      console.error("Audio playback failed:", error);
 
-      const source = audioContext.createBufferSource();
-      source.buffer = buffer;
-      source.connect(audioContext.destination);
-      source.onended = () => {
-        if (currentSource === source) {
-          currentSource = null;
-          audioState.textContent = 'Audio selesai — tekan Ulang untuk dengar semula';
-        }
-      };
-      currentSource = source;
-      source.start(0);
-      audioState.textContent = 'Sedang dimainkan';
-    } catch (err) {
-      console.error(err);
-      audioState.textContent = 'Audio gagal dimainkan';
+      setStatus(
+        "Gambar dikesan. Tekan ULANG AUDIO untuk memainkan audio."
+      );
     }
   }
 
-  document.querySelectorAll('.kb-target').forEach((el) => {
-    const index = Number(el.dataset.index);
+  function attachTargetEvents() {
+    for (let i = 0; i < TOTAL_TARGETS; i++) {
 
-    el.addEventListener('targetFound', () => {
-      activeTarget = index;
-      scanGuide.classList.add('hidden');
-      statusPill.textContent = `Gambar ${displayNumber(index)} dikesan`;
-      playAudio(index, true);
-    });
+      const target = document.querySelector(
+        `[mindar-image-target="targetIndex: ${i}"]`
+      );
 
-    el.addEventListener('targetLost', () => {
-      if (activeTarget !== index) return;
-      activeTarget = null;
-      statusPill.textContent = 'Cari gambar K-BaRa';
-      scanGuide.classList.remove('hidden');
-      // Audio terus dimainkan walaupun kamera bergerak sedikit.
-      // Jika mahu audio berhenti apabila imej hilang, nyahkomen baris berikut:
-      // stopAudio();
-    });
-  });
-
-  replayBtn.addEventListener('click', async () => {
-    if (currentIndex === null) return;
-    await ensureAudioContext();
-    playAudio(currentIndex, true);
-  });
-
-  startBtn.addEventListener('click', async () => {
-    try {
-      await ensureAudioContext();
-      startBtn.disabled = true;
-      startBtn.textContent = 'MEMULAKAN…';
-      topStatus.classList.remove('hidden');
-      statusPill.textContent = 'Meminta akses kamera…';
-
-      if (!arSystem) {
-        await new Promise((resolve) => scene.addEventListener('loaded', resolve, { once: true }));
-        arSystem = scene.systems['mindar-image-system'];
+      if (!target) {
+        console.warn(`Target entity ${i} not found.`);
+        continue;
       }
 
-      await arSystem.start();
-      startScreen.classList.add('hidden');
+      target.addEventListener("targetFound", () => {
+        playTargetAudio(i);
+      });
 
-      // Mulakan cache beberapa audio pertama tanpa melambatkan kamera.
-      [0,1,2].forEach((i) => getBuffer(i).catch(() => {}));
-    } catch (err) {
-      console.error(err);
-      startBtn.disabled = false;
-      startBtn.textContent = 'CUBA LAGI';
-      statusPill.textContent = 'Gagal memulakan AR';
-      alert('Tidak dapat memulakan AR. Pastikan akses kamera dibenarkan dan laman menggunakan HTTPS.');
+      target.addEventListener("targetLost", () => {
+
+        if (currentTarget === i) {
+          stopCurrentAudio();
+          currentTarget = null;
+
+          setStatus(
+            "Halakan kamera pada gambar K-BaRa."
+          );
+        }
+      });
     }
-  });
+  }
+
+  async function startAR() {
+
+    if (arStarted) {
+      return;
+    }
+
+    arStarted = true;
+
+    /*
+      Unlock audio playback.
+      Mobile browsers normally require the pupil
+      to tap something before audio can play.
+      The MULA AR button provides that interaction.
+    */
+
+    try {
+
+      const unlock = audios[0];
+
+      unlock.muted = true;
+
+      await unlock.play();
+
+      unlock.pause();
+      unlock.currentTime = 0;
+      unlock.muted = false;
+
+    } catch (error) {
+      console.log("Audio unlock:", error);
+    }
+
+    if (startScreen) {
+      startScreen.style.display = "none";
+    }
+
+    setStatus("Memulakan kamera...");
+
+    try {
+
+      const mindarSystem =
+        scene.systems["mindar-image-system"];
+
+      if (
+        mindarSystem &&
+        typeof mindarSystem.start === "function"
+      ) {
+        await mindarSystem.start();
+      }
+
+      setStatus(
+        "Halakan kamera pada gambar K-BaRa."
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Unable to start AR:",
+        error
+      );
+
+      arStarted = false;
+
+      if (startScreen) {
+        startScreen.style.display = "";
+      }
+
+      setStatus(
+        "Kamera tidak dapat dimulakan. Benarkan akses kamera dan cuba lagi."
+      );
+    }
+  }
+
+  if (startButton) {
+    startButton.addEventListener(
+      "click",
+      startAR
+    );
+  }
+
+  if (replayButton) {
+
+    replayButton.addEventListener(
+      "click",
+      () => {
+
+        if (currentTarget !== null) {
+
+          playTargetAudio(
+            currentTarget
+          );
+
+        } else {
+
+          setStatus(
+            "Halakan kamera pada gambar K-BaRa terlebih dahulu."
+          );
+        }
+      }
+    );
+  }
+
+  if (scene.hasLoaded) {
+
+    attachTargetEvents();
+
+  } else {
+
+    scene.addEventListener(
+      "loaded",
+      attachTargetEvents,
+      { once: true }
+    );
+  }
 })();
