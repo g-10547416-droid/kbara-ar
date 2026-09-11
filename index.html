@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ms">
+
 <head>
   <meta charset="UTF-8">
 
@@ -12,10 +13,14 @@
 
   <title>K-BaRa AR</title>
 
+  <!-- A-FRAME -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <!-- MINDAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -24,50 +29,83 @@
     body {
       margin: 0 !important;
       padding: 0 !important;
+
       width: 100% !important;
       height: 100% !important;
+
       overflow: hidden !important;
+
       background: #000 !important;
-      font-family: Arial, Helvetica, sans-serif;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
     }
+
+
+    /* ========================================
+       AR CAMERA
+       ======================================== */
 
     #ar-scene,
     a-scene {
       position: fixed !important;
+
       inset: 0 !important;
+
       width: 100vw !important;
       height: 100vh !important;
+
       margin: 0 !important;
       padding: 0 !important;
+
       z-index: 1 !important;
     }
+
 
     .a-canvas,
     canvas {
       position: fixed !important;
+
       inset: 0 !important;
+
       width: 100vw !important;
       height: 100vh !important;
     }
+
 
     video {
       position: fixed !important;
+
       inset: 0 !important;
+
       width: 100vw !important;
       height: 100vh !important;
+
       object-fit: cover !important;
+
       z-index: 0 !important;
     }
 
-    /* START SCREEN */
+
+
+    /* ========================================
+       START SCREEN
+       ======================================== */
 
     #start-screen {
       position: fixed;
+
       inset: 0;
+
       z-index: 99999;
+
       display: flex;
+
       align-items: center;
       justify-content: center;
+
       padding: 24px;
 
       background:
@@ -79,130 +117,184 @@
         );
 
       color: white;
+
       text-align: center;
     }
+
 
     .start-card {
       width: 100%;
       max-width: 420px;
 
-      padding: 28px 22px;
+      padding: 42px 24px;
 
       border-radius: 28px;
 
-      background: rgba(255,255,255,0.12);
+      background:
+        rgba(255,255,255,0.12);
 
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter:
+        blur(12px);
+
+      -webkit-backdrop-filter:
+        blur(12px);
 
       box-shadow:
-        0 20px 50px rgba(0,0,0,0.28);
+        0 20px 50px
+        rgba(0,0,0,0.28);
 
       border:
-        1px solid rgba(255,255,255,0.2);
+        1px solid
+        rgba(255,255,255,0.20);
     }
 
-    #start-logo {
-      width: 180px;
-      max-width: 70%;
-      display: block;
-      margin: 0 auto 16px auto;
 
-      filter:
-        drop-shadow(
-          0 8px 18px rgba(0,0,0,0.25)
-        );
+    .start-icon {
+      font-size: 58px;
+
+      margin-bottom: 14px;
     }
+
 
     .start-card h1 {
-      margin: 4px 0 10px 0;
-      font-size: 30px;
+      margin:
+        0 0 12px 0;
+
+      font-size: 36px;
+
       font-weight: 800;
+
+      letter-spacing:
+        0.5px;
     }
+
+
+    .start-card h2 {
+      margin:
+        0 0 18px 0;
+
+      font-size: 17px;
+
+      font-weight: 500;
+
+      opacity: 0.9;
+    }
+
 
     .start-card p {
       margin: 0;
 
       font-size: 16px;
+
       line-height: 1.55;
 
       opacity: 0.95;
     }
 
+
     #start-button {
       width: 100%;
 
-      margin-top: 24px;
+      margin-top: 26px;
 
-      padding: 17px 20px;
+      padding:
+        17px 20px;
 
       border: none;
+
       border-radius: 16px;
 
-      background: #ffffff;
-      color: #0b4f85;
+      background:
+        #ffffff;
 
-      font-size: 20px;
-      font-weight: 800;
+      color:
+        #0b4f85;
 
-      cursor: pointer;
+      font-size:
+        20px;
+
+      font-weight:
+        800;
+
+      cursor:
+        pointer;
 
       box-shadow:
-        0 10px 24px rgba(0,0,0,0.2);
+        0 10px 24px
+        rgba(0,0,0,0.20);
     }
+
 
     #start-button:active {
-      transform: scale(0.98);
+      transform:
+        scale(0.98);
     }
+
 
     #start-button:disabled {
-      opacity: 0.65;
+      opacity:
+        0.65;
     }
 
-    /* TOP BRAND */
 
-    #top-brand {
+
+    /* ========================================
+       AR TITLE
+       ======================================== */
+
+    #ar-title {
       position: fixed;
 
-      top: calc(
-        12px + env(safe-area-inset-top)
-      );
+      top:
+        calc(
+          18px +
+          env(safe-area-inset-top)
+        );
 
       left: 50%;
-      transform: translateX(-50%);
 
-      z-index: 99990;
+      transform:
+        translateX(-50%);
 
-      display: none;
+      z-index:
+        99990;
 
-      align-items: center;
-      gap: 10px;
+      display:
+        none;
 
-      padding: 8px 14px;
+      padding:
+        10px 20px;
 
-      border-radius: 18px;
+      border-radius:
+        20px;
 
-      background: rgba(0,0,0,0.5);
+      background:
+        rgba(0,0,0,0.55);
 
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      color:
+        white;
 
-      color: white;
+      font-size:
+        17px;
+
+      font-weight:
+        800;
+
+      white-space:
+        nowrap;
+
+      backdrop-filter:
+        blur(8px);
+
+      -webkit-backdrop-filter:
+        blur(8px);
     }
 
-    #top-brand img {
-      width: 42px;
-      height: 42px;
-      object-fit: contain;
-    }
 
-    #top-brand span {
-      font-size: 15px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
 
-    /* SCAN AREA */
+    /* ========================================
+       SCAN AREA
+       ======================================== */
 
     #scan-area {
       position: fixed;
@@ -213,31 +305,46 @@
       transform:
         translate(-50%, -50%);
 
-      z-index: 99980;
+      z-index:
+        99980;
 
-      width: min(78vw, 360px);
+      width:
+        min(78vw, 360px);
 
-      aspect-ratio: 1 / 1;
+      aspect-ratio:
+        1 / 1;
 
-      display: none;
+      display:
+        none;
 
-      pointer-events: none;
+      pointer-events:
+        none;
     }
 
+
     .corner {
-      position: absolute;
+      position:
+        absolute;
 
-      width: 48px;
-      height: 48px;
+      width:
+        48px;
 
-      border-color: #ffffff;
-      border-style: solid;
+      height:
+        48px;
+
+      border-color:
+        #ffffff;
+
+      border-style:
+        solid;
 
       filter:
         drop-shadow(
-          0 0 8px rgba(0,0,0,0.35)
+          0 0 8px
+          rgba(0,0,0,0.40)
         );
     }
+
 
     .corner.tl {
       top: 0;
@@ -250,6 +357,7 @@
         18px 0 0 0;
     }
 
+
     .corner.tr {
       top: 0;
       right: 0;
@@ -260,6 +368,7 @@
       border-radius:
         0 18px 0 0;
     }
+
 
     .corner.bl {
       bottom: 0;
@@ -272,6 +381,7 @@
         0 0 0 18px;
     }
 
+
     .corner.br {
       bottom: 0;
       right: 0;
@@ -283,17 +393,30 @@
         0 0 18px 0;
     }
 
+
+
+    /* ========================================
+       SCANNING LINE
+       ======================================== */
+
     #scan-line {
-      position: absolute;
+      position:
+        absolute;
 
-      left: 8%;
-      right: 8%;
+      left:
+        8%;
 
-      height: 3px;
+      right:
+        8%;
 
-      top: 10%;
+      height:
+        3px;
 
-      border-radius: 999px;
+      top:
+        10%;
+
+      border-radius:
+        999px;
 
       background:
         linear-gradient(
@@ -306,130 +429,202 @@
         );
 
       box-shadow:
-        0 0 15px rgba(37,244,255,0.9);
+        0 0 15px
+        rgba(37,244,255,0.9);
 
       animation:
-        scanMove 2.2s linear infinite;
+        scanMove
+        2.2s
+        linear
+        infinite;
     }
 
+
     @keyframes scanMove {
+
       0% {
-        top: 10%;
-        opacity: 0.8;
+        top:
+          10%;
+
+        opacity:
+          0.8;
       }
 
       50% {
-        top: 88%;
-        opacity: 1;
+        top:
+          88%;
+
+        opacity:
+          1;
       }
 
       100% {
-        top: 10%;
-        opacity: 0.8;
+        top:
+          10%;
+
+        opacity:
+          0.8;
       }
+
     }
 
-    /* STATUS */
+
+
+    /* ========================================
+       STATUS
+       ======================================== */
 
     #status {
-      position: fixed !important;
+      position:
+        fixed !important;
 
-      left: 50% !important;
+      left:
+        50% !important;
 
       bottom:
         calc(
-          92px + env(safe-area-inset-bottom)
-        )
-        !important;
+          92px +
+          env(safe-area-inset-bottom)
+        ) !important;
 
       transform:
-        translateX(-50%)
-        !important;
+        translateX(-50%) !important;
 
-      z-index: 99995 !important;
+      z-index:
+        99995 !important;
 
-      width: 88% !important;
-      max-width: 500px !important;
+      width:
+        88% !important;
 
-      padding: 13px 18px;
+      max-width:
+        500px !important;
 
-      border-radius: 15px;
+      padding:
+        13px 18px;
+
+      border-radius:
+        15px;
 
       background:
-        rgba(0,0,0,0.7);
+        rgba(0,0,0,0.72);
 
-      color: white;
+      color:
+        white;
 
-      text-align: center;
+      text-align:
+        center;
 
-      font-size: 15px;
-      font-weight: 600;
+      font-size:
+        15px;
 
-      backdrop-filter: blur(7px);
-      -webkit-backdrop-filter: blur(7px);
+      font-weight:
+        600;
+
+      backdrop-filter:
+        blur(7px);
+
+      -webkit-backdrop-filter:
+        blur(7px);
     }
 
-    /* REPLAY BUTTON */
+
+
+    /* ========================================
+       REPLAY BUTTON
+       ======================================== */
 
     #replay-button {
-      position: fixed;
+      position:
+        fixed;
 
-      left: 50%;
+      left:
+        50%;
 
       bottom:
         calc(
-          28px + env(safe-area-inset-bottom)
+          28px +
+          env(safe-area-inset-bottom)
         );
 
       transform:
         translateX(-50%);
 
-      z-index: 99996;
+      z-index:
+        99996;
 
-      display: none;
+      display:
+        none;
 
-      min-width: 190px;
+      min-width:
+        190px;
 
-      padding: 14px 22px;
+      padding:
+        14px 22px;
 
-      border: none;
-      border-radius: 16px;
+      border:
+        none;
 
-      background: #ffffff;
-      color: #0b4f85;
+      border-radius:
+        16px;
 
-      font-size: 16px;
-      font-weight: 800;
+      background:
+        #ffffff;
+
+      color:
+        #0b4f85;
+
+      font-size:
+        16px;
+
+      font-weight:
+        800;
+
+      cursor:
+        pointer;
 
       box-shadow:
-        0 8px 22px rgba(0,0,0,0.28);
+        0 8px 22px
+        rgba(0,0,0,0.28);
     }
+
 
     #replay-button:active {
       transform:
         translateX(-50%)
         scale(0.97);
     }
+
   </style>
+
 </head>
+
 
 <body>
 
-  <!-- START SCREEN -->
+
+  <!-- ========================================
+       START SCREEN
+       ======================================== -->
 
   <div id="start-screen">
+
     <div class="start-card">
 
-      <img
-        id="start-logo"
-        src="./KBARA_LOGO.png"
-        alt="Logo K-BaRa"
-      >
+      <div class="start-icon">
+        📷
+      </div>
 
-      <h1>K-BaRa AR</h1>
+      <h1>
+        K-BaRa AR
+      </h1>
+
+      <h2>
+        Kit Bahan Rangsangan
+      </h2>
 
       <p>
-        Imbas gambar K-BaRa untuk mendengar bahan rangsangan.
+        Imbas gambar K-BaRa untuk mendengar
+        bahan rangsangan.
       </p>
 
       <button id="start-button">
@@ -437,47 +632,64 @@
       </button>
 
     </div>
-  </div>
-
-  <!-- TOP BRAND -->
-
-  <div id="top-brand">
-
-    <img
-      src="./KBARA_LOGO.png"
-      alt="Logo K-BaRa"
-    >
-
-    <span>K-BaRa AR</span>
 
   </div>
 
-  <!-- SCAN FRAME -->
+
+
+  <!-- ========================================
+       AR TITLE
+       ======================================== -->
+
+  <div id="ar-title">
+    K-BaRa AR
+  </div>
+
+
+
+  <!-- ========================================
+       SCAN FRAME
+       ======================================== -->
 
   <div id="scan-area">
 
     <div class="corner tl"></div>
+
     <div class="corner tr"></div>
+
     <div class="corner bl"></div>
+
     <div class="corner br"></div>
 
     <div id="scan-line"></div>
 
   </div>
 
-  <!-- STATUS -->
+
+
+  <!-- ========================================
+       STATUS
+       ======================================== -->
 
   <div id="status">
     Tekan MULA AR
   </div>
 
-  <!-- REPLAY -->
+
+
+  <!-- ========================================
+       REPLAY BUTTON
+       ======================================== -->
 
   <button id="replay-button">
     🔊 ULANG AUDIO
   </button>
 
-  <!-- SINGLE AUDIO PLAYER -->
+
+
+  <!-- ========================================
+       SINGLE AUDIO PLAYER
+       ======================================== -->
 
   <audio
     id="kb-audio"
@@ -485,9 +697,14 @@
     playsinline
   ></audio>
 
-  <!-- AR SCENE -->
+
+
+  <!-- ========================================
+       AR SCENE
+       ======================================== -->
 
   <a-scene
+
     id="ar-scene"
 
     mindar-image="
@@ -509,20 +726,32 @@
       alpha: true;
     "
 
-    vr-mode-ui="enabled: false"
+    vr-mode-ui="
+      enabled: false
+    "
 
     device-orientation-permission-ui="
       enabled: false
     "
 
     embedded
+
   >
 
+
     <a-camera
+
       position="0 0 0"
-      look-controls="enabled: false"
-    >
-    </a-camera>
+
+      look-controls="
+        enabled: false
+      "
+
+    ></a-camera>
+
+
+
+    <!-- TARGET 01 -->
 
     <a-entity
       class="kb-target"
@@ -530,11 +759,17 @@
       mindar-image-target="targetIndex: 0">
     </a-entity>
 
+
+    <!-- TARGET 02 -->
+
     <a-entity
       class="kb-target"
       data-index="1"
       mindar-image-target="targetIndex: 1">
     </a-entity>
+
+
+    <!-- TARGET 03 -->
 
     <a-entity
       class="kb-target"
@@ -542,11 +777,17 @@
       mindar-image-target="targetIndex: 2">
     </a-entity>
 
+
+    <!-- TARGET 04 -->
+
     <a-entity
       class="kb-target"
       data-index="3"
       mindar-image-target="targetIndex: 3">
     </a-entity>
+
+
+    <!-- TARGET 05 -->
 
     <a-entity
       class="kb-target"
@@ -554,11 +795,17 @@
       mindar-image-target="targetIndex: 4">
     </a-entity>
 
+
+    <!-- TARGET 06 -->
+
     <a-entity
       class="kb-target"
       data-index="5"
       mindar-image-target="targetIndex: 5">
     </a-entity>
+
+
+    <!-- TARGET 07 -->
 
     <a-entity
       class="kb-target"
@@ -566,11 +813,17 @@
       mindar-image-target="targetIndex: 6">
     </a-entity>
 
+
+    <!-- TARGET 08 -->
+
     <a-entity
       class="kb-target"
       data-index="7"
       mindar-image-target="targetIndex: 7">
     </a-entity>
+
+
+    <!-- TARGET 09 -->
 
     <a-entity
       class="kb-target"
@@ -578,11 +831,17 @@
       mindar-image-target="targetIndex: 8">
     </a-entity>
 
+
+    <!-- TARGET 10 -->
+
     <a-entity
       class="kb-target"
       data-index="9"
       mindar-image-target="targetIndex: 9">
     </a-entity>
+
+
+    <!-- TARGET 11 -->
 
     <a-entity
       class="kb-target"
@@ -590,11 +849,17 @@
       mindar-image-target="targetIndex: 10">
     </a-entity>
 
+
+    <!-- TARGET 12 -->
+
     <a-entity
       class="kb-target"
       data-index="11"
       mindar-image-target="targetIndex: 11">
     </a-entity>
+
+
+    <!-- TARGET 13 -->
 
     <a-entity
       class="kb-target"
@@ -602,11 +867,17 @@
       mindar-image-target="targetIndex: 12">
     </a-entity>
 
+
+    <!-- TARGET 14 -->
+
     <a-entity
       class="kb-target"
       data-index="13"
       mindar-image-target="targetIndex: 13">
     </a-entity>
+
+
+    <!-- TARGET 15 -->
 
     <a-entity
       class="kb-target"
@@ -614,11 +885,17 @@
       mindar-image-target="targetIndex: 14">
     </a-entity>
 
+
+    <!-- TARGET 16 -->
+
     <a-entity
       class="kb-target"
       data-index="15"
       mindar-image-target="targetIndex: 15">
     </a-entity>
+
+
+    <!-- TARGET 17 -->
 
     <a-entity
       class="kb-target"
@@ -626,11 +903,17 @@
       mindar-image-target="targetIndex: 16">
     </a-entity>
 
+
+    <!-- TARGET 18 -->
+
     <a-entity
       class="kb-target"
       data-index="17"
       mindar-image-target="targetIndex: 17">
     </a-entity>
+
+
+    <!-- TARGET 19 -->
 
     <a-entity
       class="kb-target"
@@ -638,353 +921,588 @@
       mindar-image-target="targetIndex: 18">
     </a-entity>
 
+
+    <!-- TARGET 20 -->
+
     <a-entity
       class="kb-target"
       data-index="19"
       mindar-image-target="targetIndex: 19">
     </a-entity>
 
+
   </a-scene>
 
+
+
   <script>
-    const TOTAL_TARGETS = 20;
+
+    /* ========================================
+       ELEMENTS
+       ======================================== */
 
     const scene =
-      document.getElementById("ar-scene");
+      document.getElementById(
+        "ar-scene"
+      );
+
 
     const startButton =
-      document.getElementById("start-button");
+      document.getElementById(
+        "start-button"
+      );
+
 
     const startScreen =
-      document.getElementById("start-screen");
+      document.getElementById(
+        "start-screen"
+      );
+
 
     const status =
-      document.getElementById("status");
+      document.getElementById(
+        "status"
+      );
+
 
     const replayButton =
-      document.getElementById("replay-button");
+      document.getElementById(
+        "replay-button"
+      );
+
 
     const scanArea =
-      document.getElementById("scan-area");
+      document.getElementById(
+        "scan-area"
+      );
 
-    const topBrand =
-      document.getElementById("top-brand");
+
+    const arTitle =
+      document.getElementById(
+        "ar-title"
+      );
+
 
     const audioPlayer =
-      document.getElementById("kb-audio");
+      document.getElementById(
+        "kb-audio"
+      );
+
 
     let currentIndex = null;
 
-    let audioUnlocked = false;
 
+
+    /* ========================================
+       AUDIO FILE
+       ======================================== */
 
     function getAudioUrl(index) {
+
       const number =
-        String(index + 1)
-        .padStart(2, "0");
+        String(
+          index + 1
+        ).padStart(
+          2,
+          "0"
+        );
+
 
       return (
         `./KBARA_AUDIO_${number}.mp3`
       );
+
     }
 
 
+
+    /* ========================================
+       UNLOCK AUDIO
+       ======================================== */
+
     async function unlockAudio() {
+
       try {
+
         audioPlayer.src =
           "./KBARA_AUDIO_01.mp3";
 
-        audioPlayer.volume = 0.01;
+
+        audioPlayer.volume =
+          0.01;
+
 
         await audioPlayer.play();
 
+
         audioPlayer.pause();
 
-        audioPlayer.currentTime = 0;
 
-        audioPlayer.volume = 1;
+        audioPlayer.currentTime =
+          0;
 
-        audioUnlocked = true;
+
+        audioPlayer.volume =
+          1;
+
 
         console.log(
-          "Audio unlocked"
+          "Audio unlocked successfully"
         );
 
-      } catch (error) {
+      }
+
+      catch (error) {
+
         console.log(
           "Audio unlock warning:",
           error
         );
+
       }
+
     }
 
+
+
+    /* ========================================
+       STOP AUDIO
+       ======================================== */
 
     function stopAudio() {
+
       audioPlayer.pause();
 
+
       try {
-        audioPlayer.currentTime = 0;
-      } catch (error) {
-        console.log(error);
+
+        audioPlayer.currentTime =
+          0;
+
       }
+
+      catch (error) {
+
+        console.log(
+          error
+        );
+
+      }
+
     }
 
 
+
+    /* ========================================
+       PLAY AUDIO
+       ======================================== */
+
     async function playAudio(index) {
-      currentIndex = index;
+
+      currentIndex =
+        index;
+
 
       stopAudio();
 
+
       const audioUrl =
-        getAudioUrl(index);
+        getAudioUrl(
+          index
+        );
+
+
+      console.log(
+        "Playing:",
+        audioUrl
+      );
+
 
       audioPlayer.src =
         audioUrl;
 
+
       audioPlayer.load();
 
+
+      const number =
+        String(
+          index + 1
+        ).padStart(
+          2,
+          "0"
+        );
+
+
       try {
+
         await audioPlayer.play();
 
-        const number =
-          String(index + 1)
-          .padStart(2, "0");
 
         status.textContent =
           `✓ K-BaRa ${number} dikesan • Audio dimainkan`;
 
+
         replayButton.style.display =
           "block";
 
-      } catch (error) {
+      }
+
+      catch (error) {
+
         console.error(
           "Audio play error:",
           error
         );
 
-        const number =
-          String(index + 1)
-          .padStart(2, "0");
 
         status.textContent =
           `K-BaRa ${number} dikesan • Tekan ULANG AUDIO`;
 
+
         replayButton.style.display =
           "block";
+
       }
+
     }
 
 
+
+    /* ========================================
+       SETUP 20 TARGETS
+       ======================================== */
+
     function setupTargets() {
+
       const targets =
         document.querySelectorAll(
           ".kb-target"
         );
 
+
       targets.forEach(
         (target) => {
+
 
           const index =
             Number(
               target.dataset.index
             );
 
+
           target.addEventListener(
             "targetFound",
             () => {
 
+
               console.log(
-                "Target found:",
+                "K-BaRa target found:",
                 index + 1
               );
+
 
               scanArea.style.display =
                 "none";
 
-              playAudio(index);
+
+              playAudio(
+                index
+              );
+
             }
           );
+
 
           target.addEventListener(
             "targetLost",
             () => {
 
+
               console.log(
-                "Target lost:",
+                "K-BaRa target lost:",
                 index + 1
               );
+
 
               scanArea.style.display =
                 "block";
 
+
               status.textContent =
                 "Halakan kamera pada gambar K-BaRa";
+
             }
           );
+
         }
       );
+
     }
 
+
+
+    /* ========================================
+       REPLAY AUDIO
+       ======================================== */
 
     replayButton.addEventListener(
       "click",
       async () => {
 
+
         if (
           currentIndex === null
         ) {
+
           return;
+
         }
 
-        try {
-          await playAudio(
-            currentIndex
-          );
-        } catch (error) {
-          console.error(error);
-        }
+
+        await playAudio(
+          currentIndex
+        );
+
       }
     );
 
+
+
+    /* ========================================
+       SCENE LOADED
+       ======================================== */
 
     scene.addEventListener(
       "loaded",
       () => {
+
+
+        console.log(
+          "A-Frame loaded"
+        );
+
+
         setupTargets();
+
       }
     );
 
+
+
+    /* ========================================
+       AR READY
+       ======================================== */
 
     scene.addEventListener(
       "arReady",
       () => {
 
+
         console.log(
           "MindAR ready"
         );
 
+
         status.textContent =
           "AR sedia • Halakan kamera pada gambar K-BaRa";
+
       }
     );
 
 
+
+    /* ========================================
+       AR ERROR
+       ======================================== */
+
     scene.addEventListener(
       "arError",
       (event) => {
+
 
         console.error(
           "MindAR error:",
           event
         );
 
+
         status.textContent =
           "AR tidak dapat dimulakan.";
+
       }
     );
 
+
+
+    /* ========================================
+       START AR
+       ======================================== */
 
     startButton.addEventListener(
       "click",
       async () => {
 
+
         startButton.disabled =
           true;
 
+
         startButton.textContent =
           "MEMULAKAN...";
+
 
         status.textContent =
           "Memulakan kamera...";
 
 
+        /*
+        Unlock audio using the
+        user's MULA AR gesture.
+        */
+
         await unlockAudio();
 
 
         try {
+
+
           const mindarSystem =
             scene.systems[
               "mindar-image-system"
             ];
 
+
           if (!mindarSystem) {
+
             throw new Error(
               "MindAR system tidak ditemui."
             );
+
           }
 
+
           await mindarSystem.start();
+
+
+          /*
+          Hide start page.
+          */
 
           startScreen.style.display =
             "none";
 
-          topBrand.style.display =
-            "flex";
+
+          /*
+          Show AR title.
+          */
+
+          arTitle.style.display =
+            "block";
+
+
+          /*
+          Show scan frame.
+          */
 
           scanArea.style.display =
             "block";
 
+
           status.textContent =
             "Halakan kamera pada gambar K-BaRa";
 
-        } catch (error) {
+
+        }
+
+        catch (error) {
+
 
           console.error(
             "AR start error:",
             error
           );
 
+
           startButton.disabled =
             false;
+
 
           startButton.textContent =
             "CUBA LAGI";
 
+
           status.textContent =
             "Kamera tidak dapat dimulakan. Benarkan akses kamera dan cuba lagi.";
+
         }
+
       }
     );
 
+
+
+    /* ========================================
+       AUDIO FINISHED
+       ======================================== */
 
     audioPlayer.addEventListener(
       "ended",
       () => {
 
+
         if (
           currentIndex !== null
         ) {
+
+
           const number =
             String(
               currentIndex + 1
-            )
-            .padStart(2, "0");
+            ).padStart(
+              2,
+              "0"
+            );
+
 
           status.textContent =
             `✓ K-BaRa ${number} • Audio selesai`;
+
         }
+
       }
     );
 
+
+
+    /* ========================================
+       AUDIO ERROR
+       ======================================== */
 
     audioPlayer.addEventListener(
       "error",
       () => {
 
+
         console.error(
-          "Audio element error:",
+          "Audio error:",
           audioPlayer.error
         );
 
+
         status.textContent =
-          "Audio tidak dapat dimuatkan. Sila cuba semula.";
+          "Audio tidak dapat dimuatkan. Tekan ULANG AUDIO.";
+
 
         replayButton.style.display =
           "block";
+
       }
     );
+
 
   </script>
 
 </body>
+
 </html>
