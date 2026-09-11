@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <title>K-BaRa AR Audio</title>
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app-ui">
+    <div id="start-screen" class="screen-card">
+      <div class="logo-badge">K-BaRa</div>
+      <h1>AR Audio K-BaRa</h1>
+      <p>Tekan <strong>MULA AR</strong>, benarkan kamera, kemudian halakan kamera pada gambar K-BaRa.</p>
+      <button id="start-btn" type="button">MULA AR</button>
+      <p class="small">Gunakan kamera belakang untuk pengecaman yang lebih baik.</p>
+    </div>
+
+    <div id="top-status" class="hidden">
+      <div id="status-pill">Memulakan AR…</div>
+    </div>
+
+    <div id="scan-guide" class="hidden" aria-hidden="true">
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="scan-text">Halakan kamera pada gambar K-BaRa</div>
+    </div>
+
+    <div id="audio-panel" class="hidden">
+      <div class="audio-copy">
+        <span id="audio-icon">🔊</span>
+        <div>
+          <div id="audio-title">Audio K-BaRa</div>
+          <div id="audio-state">Sedang dimainkan</div>
+        </div>
+      </div>
+      <button id="replay-btn" type="button">↻ Ulang</button>
+    </div>
+  </div>
+
+  <a-scene
+    id="ar-scene"
+    mindar-image="imageTargetSrc: ./targets.mind; autoStart: false; maxTrack: 1; filterMinCF: 0.0001; filterBeta: 0.01;"
+    embedded
+    color-space="sRGB"
+    renderer="colorManagement: true; physicallyCorrectLights: true; antialias: true"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false">
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <a-entity class="kb-target" data-index="0" mindar-image-target="targetIndex: 0"></a-entity>
+    <a-entity class="kb-target" data-index="1" mindar-image-target="targetIndex: 1"></a-entity>
+    <a-entity class="kb-target" data-index="2" mindar-image-target="targetIndex: 2"></a-entity>
+    <a-entity class="kb-target" data-index="3" mindar-image-target="targetIndex: 3"></a-entity>
+    <a-entity class="kb-target" data-index="4" mindar-image-target="targetIndex: 4"></a-entity>
+    <a-entity class="kb-target" data-index="5" mindar-image-target="targetIndex: 5"></a-entity>
+    <a-entity class="kb-target" data-index="6" mindar-image-target="targetIndex: 6"></a-entity>
+    <a-entity class="kb-target" data-index="7" mindar-image-target="targetIndex: 7"></a-entity>
+    <a-entity class="kb-target" data-index="8" mindar-image-target="targetIndex: 8"></a-entity>
+    <a-entity class="kb-target" data-index="9" mindar-image-target="targetIndex: 9"></a-entity>
+    <a-entity class="kb-target" data-index="10" mindar-image-target="targetIndex: 10"></a-entity>
+    <a-entity class="kb-target" data-index="11" mindar-image-target="targetIndex: 11"></a-entity>
+    <a-entity class="kb-target" data-index="12" mindar-image-target="targetIndex: 12"></a-entity>
+    <a-entity class="kb-target" data-index="13" mindar-image-target="targetIndex: 13"></a-entity>
+    <a-entity class="kb-target" data-index="14" mindar-image-target="targetIndex: 14"></a-entity>
+    <a-entity class="kb-target" data-index="15" mindar-image-target="targetIndex: 15"></a-entity>
+    <a-entity class="kb-target" data-index="16" mindar-image-target="targetIndex: 16"></a-entity>
+    <a-entity class="kb-target" data-index="17" mindar-image-target="targetIndex: 17"></a-entity>
+    <a-entity class="kb-target" data-index="18" mindar-image-target="targetIndex: 18"></a-entity>
+    <a-entity class="kb-target" data-index="19" mindar-image-target="targetIndex: 19"></a-entity>
+  </a-scene>
+
+  <script src="app.js"></script>
+</body>
+</html>
