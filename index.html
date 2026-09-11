@@ -1,79 +1,252 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
-  <title>K-BaRa AR Audio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>K-BaRa AR</title>
+
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    #start-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(135deg, #0f172a, #1e3a8a);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .box {
+      max-width: 420px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    #start-button {
+      margin-top: 24px;
+      padding: 16px 30px;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 14px;
+      background: white;
+      color: #1e3a8a;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    #status {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9998;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      text-align: center;
+      width: 85%;
+      max-width: 500px;
+    }
+  </style>
 </head>
+
 <body>
-  <div id="app-ui">
-    <div id="start-screen" class="screen-card">
-      <div class="logo-badge">K-BaRa</div>
-      <h1>AR Audio K-BaRa</h1>
-      <p>Tekan <strong>MULA AR</strong>, benarkan kamera, kemudian halakan kamera pada gambar K-BaRa.</p>
-      <button id="start-btn" type="button">MULA AR</button>
-      <p class="small">Gunakan kamera belakang untuk pengecaman yang lebih baik.</p>
-    </div>
 
-    <div id="top-status" class="hidden">
-      <div id="status-pill">Memulakan AR…</div>
-    </div>
+  <div id="start-screen">
+    <div class="box">
+      <h1>K-BaRa AR</h1>
+      <p>
+        Tekan butang di bawah untuk memulakan kamera.
+        Kemudian halakan kamera pada gambar K-BaRa.
+      </p>
 
-    <div id="scan-guide" class="hidden" aria-hidden="true">
-      <div class="corner tl"></div><div class="corner tr"></div>
-      <div class="corner bl"></div><div class="corner br"></div>
-      <div class="scan-text">Halakan kamera pada gambar K-BaRa</div>
+      <button id="start-button">
+        MULA AR
+      </button>
     </div>
+  </div>
 
-    <div id="audio-panel" class="hidden">
-      <div class="audio-copy">
-        <span id="audio-icon">🔊</span>
-        <div>
-          <div id="audio-title">Audio K-BaRa</div>
-          <div id="audio-state">Sedang dimainkan</div>
-        </div>
-      </div>
-      <button id="replay-btn" type="button">↻ Ulang</button>
-    </div>
+  <div id="status">
+    Tekan MULA AR
   </div>
 
   <a-scene
     id="ar-scene"
-    mindar-image="imageTargetSrc: ./targets.mind; autoStart: false; maxTrack: 1; filterMinCF: 0.0001; filterBeta: 0.01;"
-    embedded
+    mindar-image="
+      imageTargetSrc: ./targets.mind;
+      autoStart: false;
+      filterMinCF: 0.001;
+      filterBeta: 10;
+      missTolerance: 5;
+      warmupTolerance: 5;
+    "
     color-space="sRGB"
-    renderer="colorManagement: true; physicallyCorrectLights: true; antialias: true"
+    renderer="colorManagement: true, physicallyCorrectLights"
     vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false">
+    device-orientation-permission-ui="enabled: false"
+    embedded
+  >
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-camera
+      position="0 0 0"
+      look-controls="enabled: false">
+    </a-camera>
 
-    <a-entity class="kb-target" data-index="0" mindar-image-target="targetIndex: 0"></a-entity>
-    <a-entity class="kb-target" data-index="1" mindar-image-target="targetIndex: 1"></a-entity>
-    <a-entity class="kb-target" data-index="2" mindar-image-target="targetIndex: 2"></a-entity>
-    <a-entity class="kb-target" data-index="3" mindar-image-target="targetIndex: 3"></a-entity>
-    <a-entity class="kb-target" data-index="4" mindar-image-target="targetIndex: 4"></a-entity>
-    <a-entity class="kb-target" data-index="5" mindar-image-target="targetIndex: 5"></a-entity>
-    <a-entity class="kb-target" data-index="6" mindar-image-target="targetIndex: 6"></a-entity>
-    <a-entity class="kb-target" data-index="7" mindar-image-target="targetIndex: 7"></a-entity>
-    <a-entity class="kb-target" data-index="8" mindar-image-target="targetIndex: 8"></a-entity>
-    <a-entity class="kb-target" data-index="9" mindar-image-target="targetIndex: 9"></a-entity>
-    <a-entity class="kb-target" data-index="10" mindar-image-target="targetIndex: 10"></a-entity>
-    <a-entity class="kb-target" data-index="11" mindar-image-target="targetIndex: 11"></a-entity>
-    <a-entity class="kb-target" data-index="12" mindar-image-target="targetIndex: 12"></a-entity>
-    <a-entity class="kb-target" data-index="13" mindar-image-target="targetIndex: 13"></a-entity>
-    <a-entity class="kb-target" data-index="14" mindar-image-target="targetIndex: 14"></a-entity>
-    <a-entity class="kb-target" data-index="15" mindar-image-target="targetIndex: 15"></a-entity>
-    <a-entity class="kb-target" data-index="16" mindar-image-target="targetIndex: 16"></a-entity>
-    <a-entity class="kb-target" data-index="17" mindar-image-target="targetIndex: 17"></a-entity>
-    <a-entity class="kb-target" data-index="18" mindar-image-target="targetIndex: 18"></a-entity>
-    <a-entity class="kb-target" data-index="19" mindar-image-target="targetIndex: 19"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 0"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 1"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 2"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 3"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 4"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 5"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 6"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 7"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 8"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 9"></a-entity>
+
+    <a-entity mindar-image-target="targetIndex: 10"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 11"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 12"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 13"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 14"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 15"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 16"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 17"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 18"></a-entity>
+    <a-entity mindar-image-target="targetIndex: 19"></a-entity>
+
   </a-scene>
 
-  <script src="app.js"></script>
+  <script>
+    const startButton = document.getElementById("start-button");
+    const startScreen = document.getElementById("start-screen");
+    const status = document.getElementById("status");
+    const scene = document.getElementById("ar-scene");
+
+    const audio = [];
+
+    for (let i = 1; i <= 20; i++) {
+      const number = String(i).padStart(2, "0");
+
+      const player = new Audio(
+        `KBARA_AUDIO_${number}.mp3`
+      );
+
+      player.preload = "auto";
+      audio.push(player);
+    }
+
+    let currentAudio = null;
+
+    function stopAudio() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+
+      currentAudio = null;
+    }
+
+    async function playAudio(index) {
+      stopAudio();
+
+      currentAudio = audio[index];
+      currentAudio.currentTime = 0;
+
+      try {
+        await currentAudio.play();
+
+        status.innerText =
+          `Gambar K-BaRa ${String(index + 1).padStart(2, "0")} dikesan`;
+
+      } catch (error) {
+        console.error(error);
+
+        status.innerText =
+          "Gambar dikesan tetapi audio tidak dapat dimainkan.";
+      }
+    }
+
+    function setupTargets() {
+      const targets =
+        document.querySelectorAll("[mindar-image-target]");
+
+      targets.forEach((target, index) => {
+
+        target.addEventListener("targetFound", () => {
+          playAudio(index);
+        });
+
+        target.addEventListener("targetLost", () => {
+          stopAudio();
+
+          status.innerText =
+            "Halakan kamera pada gambar K-BaRa";
+        });
+
+      });
+    }
+
+    scene.addEventListener("loaded", () => {
+      setupTargets();
+    });
+
+    startButton.addEventListener("click", async () => {
+
+      status.innerText = "Memulakan kamera...";
+
+      try {
+
+        const mindarSystem =
+          scene.systems["mindar-image-system"];
+
+        if (!mindarSystem) {
+          throw new Error("MindAR system tidak ditemui");
+        }
+
+        await mindarSystem.start();
+
+        startScreen.style.display = "none";
+
+        status.innerText =
+          "Halakan kamera pada gambar K-BaRa";
+
+      } catch (error) {
+
+        console.error(error);
+
+        status.innerText =
+          "Kamera tidak dapat dimulakan. Sila benarkan akses kamera.";
+
+      }
+
+    });
+  </script>
+
 </body>
 </html>
