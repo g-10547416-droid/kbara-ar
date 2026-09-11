@@ -13,14 +13,10 @@
 
   <title>K-BaRa AR</title>
 
-  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
-  <!-- MindAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
-
     * {
       box-sizing: border-box;
     }
@@ -36,15 +32,10 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    /* ==============================
-       FULL SCREEN AR
-       ============================== */
-
     #ar-scene,
     a-scene {
       position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
+      inset: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
       margin: 0 !important;
@@ -52,124 +43,89 @@
       z-index: 1 !important;
     }
 
-    .a-canvas {
+    .a-canvas,
+    canvas {
       position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
+      inset: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
     }
 
     video {
       position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-
+      inset: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
-
-      min-width: 100% !important;
-      min-height: 100% !important;
-
       object-fit: cover !important;
-
       z-index: 0 !important;
     }
 
-    canvas {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-
-      width: 100vw !important;
-      height: 100vh !important;
-    }
-
-
-    /* ==============================
-       START SCREEN
-       ============================== */
+    /* START SCREEN */
 
     #start-screen {
       position: fixed;
-
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-
-      width: 100%;
-      height: 100%;
-
+      inset: 0;
       z-index: 99999;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
-      padding: 25px;
-
-      text-align: center;
-
-      color: white;
-
+      padding: 24px;
       background:
         linear-gradient(
-          135deg,
-          #0f172a 0%,
-          #172554 45%,
-          #1e3a8a 100%
+          160deg,
+          #062f63 0%,
+          #0f62a8 48%,
+          #0bb8c4 100%
         );
+      color: white;
+      text-align: center;
     }
 
-    #start-screen .box {
+    .start-card {
       width: 100%;
-      max-width: 430px;
+      max-width: 420px;
+      padding: 28px 22px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
-    #start-screen h1 {
-      margin: 0 0 12px 0;
-
-      font-size: 36px;
-      font-weight: 700;
+    #start-logo {
+      width: 180px;
+      max-width: 70%;
+      display: block;
+      margin: 0 auto 16px auto;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.25));
     }
 
-    #start-screen p {
+    .start-card h1 {
+      margin: 4px 0 10px 0;
+      font-size: 30px;
+      font-weight: 800;
+    }
+
+    .start-card p {
       margin: 0;
-
-      font-size: 17px;
-      line-height: 1.6;
-
+      font-size: 16px;
+      line-height: 1.55;
       opacity: 0.95;
     }
 
-
-    /* ==============================
-       START BUTTON
-       ============================== */
-
     #start-button {
-      display: block;
-
       width: 100%;
-
-      margin-top: 28px;
-
-      padding: 17px 25px;
-
+      margin-top: 24px;
+      padding: 17px 20px;
       border: none;
-      border-radius: 15px;
-
-      background: white;
-      color: #172554;
-
+      border-radius: 16px;
+      background: #ffffff;
+      color: #0b4f85;
       font-size: 20px;
-      font-weight: bold;
-
+      font-weight: 800;
       cursor: pointer;
-
-      box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.2);
     }
 
     #start-button:active {
@@ -177,73 +133,200 @@
     }
 
     #start-button:disabled {
-      opacity: 0.7;
+      opacity: 0.65;
     }
 
+    /* TOP BRANDING */
 
-    /* ==============================
-       STATUS
-       ============================== */
+    #top-brand {
+      position: fixed;
+      top: calc(12px + env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99990;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: white;
+    }
+
+    #top-brand img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    #top-brand span {
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* SCAN FRAME */
+
+    #scan-area {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 99980;
+      width: min(78vw, 360px);
+      aspect-ratio: 1 / 1;
+      display: none;
+      pointer-events: none;
+    }
+
+    .corner {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      border-color: #ffffff;
+      border-style: solid;
+      filter: drop-shadow(0 0 8px rgba(0,0,0,0.35));
+    }
+
+    .corner.tl {
+      top: 0;
+      left: 0;
+      border-width: 5px 0 0 5px;
+      border-radius: 18px 0 0 0;
+    }
+
+    .corner.tr {
+      top: 0;
+      right: 0;
+      border-width: 5px 5px 0 0;
+      border-radius: 0 18px 0 0;
+    }
+
+    .corner.bl {
+      bottom: 0;
+      left: 0;
+      border-width: 0 0 5px 5px;
+      border-radius: 0 0 0 18px;
+    }
+
+    .corner.br {
+      bottom: 0;
+      right: 0;
+      border-width: 0 5px 5px 0;
+      border-radius: 0 0 18px 0;
+    }
+
+    #scan-line {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      height: 3px;
+      top: 10%;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        #25f4ff,
+        #ffffff,
+        #25f4ff,
+        transparent
+      );
+      box-shadow: 0 0 15px rgba(37,244,255,0.9);
+      animation: scanMove 2.2s linear infinite;
+    }
+
+    @keyframes scanMove {
+      0% {
+        top: 10%;
+        opacity: 0.8;
+      }
+      50% {
+        top: 88%;
+        opacity: 1;
+      }
+      100% {
+        top: 10%;
+        opacity: 0.8;
+      }
+    }
+
+    /* STATUS */
 
     #status {
       position: fixed !important;
-
       left: 50% !important;
-
-      bottom:
-        calc(25px + env(safe-area-inset-bottom))
-        !important;
-
-      transform:
-        translateX(-50%)
-        !important;
-
-      z-index: 99998 !important;
+      bottom: calc(92px + env(safe-area-inset-bottom)) !important;
+      transform: translateX(-50%) !important;
+      z-index: 99995 !important;
 
       width: 88% !important;
       max-width: 500px !important;
 
       padding: 13px 18px;
+      border-radius: 15px;
 
-      border-radius: 14px;
-
-      background:
-        rgba(0, 0, 0, 0.72);
-
+      background: rgba(0,0,0,0.7);
       color: white;
 
       text-align: center;
-
       font-size: 15px;
-      font-weight: 500;
+      font-weight: 600;
 
-      backdrop-filter: blur(6px);
-
-      -webkit-backdrop-filter: blur(6px);
-
-      pointer-events: none;
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
     }
 
+    /* REPLAY BUTTON */
+
+    #replay-button {
+      position: fixed;
+      left: 50%;
+      bottom: calc(28px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      z-index: 99996;
+
+      display: none;
+
+      min-width: 190px;
+      padding: 14px 22px;
+
+      border: none;
+      border-radius: 16px;
+
+      background: #ffffff;
+      color: #0b4f85;
+
+      font-size: 16px;
+      font-weight: 800;
+
+      box-shadow: 0 8px 22px rgba(0,0,0,0.28);
+    }
+
+    #replay-button:active {
+      transform: translateX(-50%) scale(0.97);
+    }
   </style>
 </head>
 
-
 <body>
 
-
-  <!-- ==============================
-       START SCREEN
-       ============================== -->
+  <!-- START SCREEN -->
 
   <div id="start-screen">
+    <div class="start-card">
 
-    <div class="box">
+      <img
+        id="start-logo"
+        src="./KBARA_LOGO.png"
+        alt="Logo K-BaRa"
+      >
 
       <h1>K-BaRa AR</h1>
 
       <p>
-        Tekan butang di bawah untuk memulakan kamera.
-        Kemudian halakan kamera pada gambar K-BaRa.
+        Imbas gambar K-BaRa untuk mendengar bahan rangsangan.
       </p>
 
       <button id="start-button">
@@ -251,27 +334,40 @@
       </button>
 
     </div>
-
   </div>
 
+  <!-- TOP BRAND -->
 
+  <div id="top-brand">
+    <img src="./KBARA_LOGO.png" alt="Logo K-BaRa">
+    <span>K-BaRa AR</span>
+  </div>
 
-  <!-- ==============================
-       STATUS MESSAGE
-       ============================== -->
+  <!-- SCAN FRAME -->
+
+  <div id="scan-area">
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
+    <div id="scan-line"></div>
+  </div>
+
+  <!-- STATUS -->
 
   <div id="status">
     Tekan MULA AR
   </div>
 
+  <!-- REPLAY -->
 
+  <button id="replay-button">
+    🔊 ULANG AUDIO
+  </button>
 
-  <!-- ==============================
-       AR SCENE
-       ============================== -->
+  <!-- AR -->
 
   <a-scene
-
     id="ar-scene"
 
     mindar-image="
@@ -294,15 +390,9 @@
     "
 
     vr-mode-ui="enabled: false"
-
     device-orientation-permission-ui="enabled: false"
-
     embedded
-
   >
-
-
-    <!-- CAMERA -->
 
     <a-camera
       position="0 0 0"
@@ -310,403 +400,173 @@
     >
     </a-camera>
 
-
-
-    <!-- ============================
-         20 K-BaRa TARGETS
-         ============================ -->
-
-    <a-entity
-      class="kb-target"
-      data-index="0"
-      mindar-image-target="targetIndex: 0">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="1"
-      mindar-image-target="targetIndex: 1">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="2"
-      mindar-image-target="targetIndex: 2">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="3"
-      mindar-image-target="targetIndex: 3">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="4"
-      mindar-image-target="targetIndex: 4">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="5"
-      mindar-image-target="targetIndex: 5">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="6"
-      mindar-image-target="targetIndex: 6">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="7"
-      mindar-image-target="targetIndex: 7">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="8"
-      mindar-image-target="targetIndex: 8">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="9"
-      mindar-image-target="targetIndex: 9">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="10"
-      mindar-image-target="targetIndex: 10">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="11"
-      mindar-image-target="targetIndex: 11">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="12"
-      mindar-image-target="targetIndex: 12">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="13"
-      mindar-image-target="targetIndex: 13">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="14"
-      mindar-image-target="targetIndex: 14">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="15"
-      mindar-image-target="targetIndex: 15">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="16"
-      mindar-image-target="targetIndex: 16">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="17"
-      mindar-image-target="targetIndex: 17">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="18"
-      mindar-image-target="targetIndex: 18">
-    </a-entity>
-
-    <a-entity
-      class="kb-target"
-      data-index="19"
-      mindar-image-target="targetIndex: 19">
-    </a-entity>
-
+    <a-entity class="kb-target" data-index="0" mindar-image-target="targetIndex: 0"></a-entity>
+    <a-entity class="kb-target" data-index="1" mindar-image-target="targetIndex: 1"></a-entity>
+    <a-entity class="kb-target" data-index="2" mindar-image-target="targetIndex: 2"></a-entity>
+    <a-entity class="kb-target" data-index="3" mindar-image-target="targetIndex: 3"></a-entity>
+    <a-entity class="kb-target" data-index="4" mindar-image-target="targetIndex: 4"></a-entity>
+    <a-entity class="kb-target" data-index="5" mindar-image-target="targetIndex: 5"></a-entity>
+    <a-entity class="kb-target" data-index="6" mindar-image-target="targetIndex: 6"></a-entity>
+    <a-entity class="kb-target" data-index="7" mindar-image-target="targetIndex: 7"></a-entity>
+    <a-entity class="kb-target" data-index="8" mindar-image-target="targetIndex: 8"></a-entity>
+    <a-entity class="kb-target" data-index="9" mindar-image-target="targetIndex: 9"></a-entity>
+    <a-entity class="kb-target" data-index="10" mindar-image-target="targetIndex: 10"></a-entity>
+    <a-entity class="kb-target" data-index="11" mindar-image-target="targetIndex: 11"></a-entity>
+    <a-entity class="kb-target" data-index="12" mindar-image-target="targetIndex: 12"></a-entity>
+    <a-entity class="kb-target" data-index="13" mindar-image-target="targetIndex: 13"></a-entity>
+    <a-entity class="kb-target" data-index="14" mindar-image-target="targetIndex: 14"></a-entity>
+    <a-entity class="kb-target" data-index="15" mindar-image-target="targetIndex: 15"></a-entity>
+    <a-entity class="kb-target" data-index="16" mindar-image-target="targetIndex: 16"></a-entity>
+    <a-entity class="kb-target" data-index="17" mindar-image-target="targetIndex: 17"></a-entity>
+    <a-entity class="kb-target" data-index="18" mindar-image-target="targetIndex: 18"></a-entity>
+    <a-entity class="kb-target" data-index="19" mindar-image-target="targetIndex: 19"></a-entity>
 
   </a-scene>
 
-
-
-  <!-- ==============================
-       JAVASCRIPT
-       ============================== -->
-
   <script>
-
     const TOTAL_TARGETS = 20;
 
-    const scene =
-      document.getElementById("ar-scene");
-
-    const startButton =
-      document.getElementById("start-button");
-
-    const startScreen =
-      document.getElementById("start-screen");
-
-    const status =
-      document.getElementById("status");
-
-
-    /* ==============================
-       AUDIO
-       ============================== */
+    const scene = document.getElementById("ar-scene");
+    const startButton = document.getElementById("start-button");
+    const startScreen = document.getElementById("start-screen");
+    const status = document.getElementById("status");
+    const replayButton = document.getElementById("replay-button");
+    const scanArea = document.getElementById("scan-area");
+    const topBrand = document.getElementById("top-brand");
 
     const audioPlayers = [];
 
     let currentAudio = null;
-
     let currentIndex = null;
 
+    for (let i = 1; i <= TOTAL_TARGETS; i++) {
+      const number = String(i).padStart(2, "0");
 
-    for (
-      let i = 1;
-      i <= TOTAL_TARGETS;
-      i++
-    ) {
-
-      const number =
-        String(i).padStart(2, "0");
-
-      const player =
-        new Audio(
-          `./KBARA_AUDIO_${number}.mp3`
-        );
+      const player = new Audio(
+        `./KBARA_AUDIO_${number}.mp3`
+      );
 
       player.preload = "auto";
-
       audioPlayers.push(player);
-
     }
 
-
-
-    /* ==============================
-       STOP AUDIO
-       ============================== */
-
     function stopAudio() {
-
       if (currentAudio) {
-
         currentAudio.pause();
-
         currentAudio.currentTime = 0;
-
       }
 
       currentAudio = null;
-
     }
 
-
-
-    /* ==============================
-       PLAY AUDIO
-       ============================== */
-
     async function playAudio(index) {
-
       stopAudio();
 
       currentIndex = index;
 
-      const player =
-        audioPlayers[index];
+      const player = audioPlayers[index];
 
       if (!player) {
-
         status.textContent =
           "Fail audio tidak ditemui.";
-
         return;
-
       }
 
       currentAudio = player;
-
       currentAudio.currentTime = 0;
 
-
       try {
-
         await currentAudio.play();
 
         const number =
-          String(index + 1)
-          .padStart(2, "0");
+          String(index + 1).padStart(2, "0");
 
         status.textContent =
-          `Gambar K-BaRa ${number} dikesan • Audio dimainkan`;
+          `✓ K-BaRa ${number} dikesan • Audio dimainkan`;
 
-      }
+        replayButton.style.display =
+          "block";
 
-      catch (error) {
-
-        console.error(
-          "Audio error:",
-          error
-        );
+      } catch (error) {
+        console.error(error);
 
         status.textContent =
           "Gambar dikesan tetapi audio tidak dapat dimainkan.";
-
       }
-
     }
-
-
-
-    /* ==============================
-       TARGET EVENTS
-       ============================== */
 
     function setupTargets() {
-
       const targets =
-        document.querySelectorAll(
-          ".kb-target"
+        document.querySelectorAll(".kb-target");
+
+      targets.forEach((target) => {
+        const index =
+          Number(target.dataset.index);
+
+        target.addEventListener(
+          "targetFound",
+          () => {
+            scanArea.style.display = "none";
+            playAudio(index);
+          }
         );
 
+        target.addEventListener(
+          "targetLost",
+          () => {
+            scanArea.style.display = "block";
 
-      targets.forEach(
-        (target) => {
-
-          const index =
-            Number(
-              target.dataset.index
-            );
-
-
-          target.addEventListener(
-            "targetFound",
-            () => {
-
-              console.log(
-                "Target found:",
-                index + 1
-              );
-
-              playAudio(index);
-
-            }
-          );
-
-
-          target.addEventListener(
-            "targetLost",
-            () => {
-
-              console.log(
-                "Target lost:",
-                index + 1
-              );
-
-              /*
-               Audio sengaja tidak dihentikan
-               apabila gambar hilang seketika
-               daripada kamera.
-              */
-
-              status.textContent =
-                "Halakan kamera pada gambar K-BaRa";
-
-            }
-          );
-
-        }
-      );
-
+            status.textContent =
+              "Halakan kamera pada gambar K-BaRa";
+          }
+        );
+      });
     }
 
-
-
-    /* ==============================
-       SCENE READY
-       ============================== */
+    replayButton.addEventListener(
+      "click",
+      () => {
+        if (currentIndex !== null) {
+          playAudio(currentIndex);
+        }
+      }
+    );
 
     scene.addEventListener(
       "loaded",
       () => {
-
         setupTargets();
-
       }
     );
-
-
 
     scene.addEventListener(
       "arReady",
       () => {
-
-        console.log(
-          "MindAR ready"
-        );
-
         status.textContent =
           "AR sedia • Halakan kamera pada gambar K-BaRa";
-
       }
     );
-
-
 
     scene.addEventListener(
       "arError",
-      (event) => {
-
-        console.error(
-          "MindAR error:",
-          event
-        );
-
+      () => {
         status.textContent =
           "AR tidak dapat dimulakan.";
-
       }
     );
-
-
-
-    /* ==============================
-       START AR
-       ============================== */
 
     startButton.addEventListener(
       "click",
       async () => {
 
         startButton.disabled = true;
-
         startButton.textContent =
           "MEMULAKAN...";
 
         status.textContent =
           "Memulakan kamera...";
 
-
-        /*
-          Unlock audio pada iPhone / Android
-          menggunakan user gesture.
-        */
-
         try {
-
           const firstAudio =
             audioPlayers[0];
 
@@ -715,108 +575,52 @@
           await firstAudio.play();
 
           firstAudio.pause();
-
           firstAudio.currentTime = 0;
-
           firstAudio.muted = false;
 
+        } catch (error) {
+          console.log(error);
         }
-
-        catch (error) {
-
-          console.log(
-            "Audio unlock:",
-            error
-          );
-
-        }
-
 
         try {
-
           const mindarSystem =
             scene.systems[
               "mindar-image-system"
             ];
 
-
           if (!mindarSystem) {
-
             throw new Error(
               "MindAR system tidak ditemui."
             );
-
           }
 
-
           await mindarSystem.start();
-
 
           startScreen.style.display =
             "none";
 
+          topBrand.style.display =
+            "flex";
+
+          scanArea.style.display =
+            "block";
 
           status.textContent =
             "Halakan kamera pada gambar K-BaRa";
 
-
-        }
-
-        catch (error) {
-
-          console.error(
-            "AR start error:",
-            error
-          );
-
+        } catch (error) {
+          console.error(error);
 
           startButton.disabled = false;
-
           startButton.textContent =
             "CUBA LAGI";
 
-
           status.textContent =
             "Kamera tidak dapat dimulakan. Benarkan akses kamera dan cuba lagi.";
-
         }
-
       }
     );
-
-
-    /* ==============================
-       SCREEN SIZE FIX
-       ============================== */
-
-    function fixScreenSize() {
-
-      document.documentElement.style
-        .setProperty(
-          "--app-height",
-          `${window.innerHeight}px`
-        );
-
-    }
-
-
-    window.addEventListener(
-      "resize",
-      fixScreenSize
-    );
-
-
-    window.addEventListener(
-      "orientationchange",
-      fixScreenSize
-    );
-
-
-    fixScreenSize();
-
   </script>
 
-
 </body>
-
 </html>
